@@ -10,13 +10,17 @@ from ristocloud import Canteen, MenuType, Dish
 CANTEEN_URL = "https://unitrieste.compasscloud.it/"
 canteen = Canteen(CANTEEN_URL)
 
-
 async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
   menus: list[MenuType] = canteen.get_menus()
   keyboard = [
     [
-      # InlineKeyboardButton(menu.name, callback_data=f"menu_{menu._id}")
-      InlineKeyboardButton(menu.name, web_app=WebAppInfo(url="http://192.168.1.20:3000/menu_webapp.html"),)
+      InlineKeyboardButton(
+        menu.name, 
+        web_app=WebAppInfo(url=f"https://tg-ristocloud.web.app/menu?canteen_url={CANTEEN_URL}&menu_id={menu._id}&meal_type_id={menu.meal_types[0]._id}")
+      ) if len(menu.meal_types) == 1 else InlineKeyboardButton(
+        menu.name,
+        callback_data=f"menu_{menu._id}"
+      )
     ] for menu in menus
   ]
   reply_markup = InlineKeyboardMarkup(keyboard)
@@ -41,8 +45,8 @@ async def menu_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
       [
         [
           InlineKeyboardButton(
-            mt.name, 
-            callback_data=f"menu_{menu_id}_{mt._id}"
+            mt.name,
+            web_app=WebAppInfo(url=f"https://tg-ristocloud.web.app/menu?canteen_url={CANTEEN_URL}&menu_id={menu_id}&meal_type_id={mt._id}")
           ) for mt in chosen_menu.meal_types
         ]
       ]
@@ -52,7 +56,6 @@ async def menu_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     await query.message.reply_markdown_v2(
       "\n".join([f"\U0001F35D • {dish.name}" for dish in dishes])
     )
-  
 
 async def message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
   pass
