@@ -1,13 +1,17 @@
 from telegram import Update, ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 from telegram.ext import Application, CommandHandler, MessageHandler, ContextTypes, CallbackQueryHandler
 
+import sys
 import os
 from dotenv import load_dotenv
 load_dotenv()
 
 from ristocloud import Canteen, MenuType, Dish
 
-CANTEEN_URL = "https://unitrieste.compasscloud.it/"
+if len(sys.argv) < 2:
+  print(f"Missing canteen URL: {sys.argv[0]} <canteen url>")
+  sys.exit(1)
+CANTEEN_URL = sys.argv[1]
 canteen = Canteen(CANTEEN_URL)
 
 async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

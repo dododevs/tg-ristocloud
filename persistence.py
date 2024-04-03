@@ -28,7 +28,7 @@ class Session:
     return self.terminate(True, "What?")
     
   def save(self):
-    cur.execute("INSERT INTO sessions (chatid, faculty, course, year, setting_faculty, setting_course, setting_year) VALUES (%s, %s, %s, %s, %s, %s, %s) ON CONFLICT (chatid) DO UPDATE SET faculty = %s, course = %s, year = %s, setting_faculty = %s, setting_course = %s, setting_year = %s", (self.chatid, str(self.faculty), str(self.course), str(self.year), 1 if self.is_setting_faculty else 0, 1 if self.is_setting_course else 0, 1 if self.is_setting_year else 0, str(self.faculty), str(self.course), str(self.year), 1 if self.is_setting_faculty else 0, 1 if self.is_setting_course else 0, 1 if self.is_setting_year else 0))
+    # cur.execute("INSERT INTO sessions (chatid) VALUES (%s) ON CONFLICT (chatid) DO UPDATE SET faculty = %s, course = %s, year = %s, setting_faculty = %s, setting_course = %s, setting_year = %s", (self.chatid, str(self.faculty), str(self.course), str(self.year), 1 if self.is_setting_faculty else 0, 1 if self.is_setting_course else 0, 1 if self.is_setting_year else 0, str(self.faculty), str(self.course), str(self.year), 1 if self.is_setting_faculty else 0, 1 if self.is_setting_course else 0, 1 if self.is_setting_year else 0))
     db.commit()
 
 # print("[persistence] Dropping table (remove in production)...")
